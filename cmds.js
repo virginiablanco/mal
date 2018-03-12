@@ -100,9 +100,11 @@ exports.testCmd=(rl,id) => {
                 resp=respuesta.toLowerCase().trim();
                 if (resp === quiz.answer.toLowerCase().trim()){
                     log('Su respuesta es: ');
+                    log ('Correcta');
                     biglog('CORRECTO', 'green');
                 } else{
                     log('Su respuesta es: ');
+                    log ('Incorrecta');
                     biglog('INCORRECTO', 'red');
                 }
                 rl.prompt();
