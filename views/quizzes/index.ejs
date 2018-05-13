@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= Lista de Quizzes %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<A HREF = "http://localhost:3000">Índice</A>
+<h1>La lista de quizzes es:</h1>
+<ol>
+    <% for (var i in quizzes) {%>
+    <% var quiz=quizzes[i] %>
+  <li>
+      <%= quiz.question%> : <%=quiz.answer %>
+  </li>
+    <%  }  %>
+</ol>
+<p>Welcome to <%= title %></p>
+</body>
+</html>
