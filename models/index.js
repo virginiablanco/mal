@@ -1,34 +1,31 @@
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize("sqlite:quizzes.sqlite", {logging: false}); //entre paréntesis base de datos a la que quiero acceder
-//al poner lo de {logging: false} te dejan de salir trazas
+const path = require('path');
 
-sequelize.define('quiz', {
-    question: {
-        type: Sequelize.STRING,
-        unique: {msg: "Ya existe esta pregunta"},
-        validate: {notEmpty: {msg: "La pregunta no puede estar vacía"}}
-    },
-    answer: {
-        type: Sequelize.STRING,
-        validate: {notEmpty: {msg: "La pregunta no puede estar vacía"}}
-    }
+// Load ORM
+const Sequelize = require('sequelize');
+
+
+// To use SQLite data base:
+//    DATABASE_URL = sqlite:quiz.sqlite
+// To use  Heroku Postgres data base:
+//    DATABASE_URL = postgres://user:passwd@host:port/database
+
+const url = process.env.DATABASE_URL || "sqlite:quiz.sqlite";
+
+const sequelize = new Sequelize(url);
+
+// Import the definition of the Quiz Table from quiz.js
+sequelize.import(path.join(__dirname, 'quiz'));
+
+// Session
+sequelize.import(path.join(__dirname,'session'));
+
+// Create tables
+sequelize.sync()
+.then(() => console.log('Data Bases created successfully'))
+.catch(error => {
+    console.log("Error creating the data base tables:", error);
+    process.exit(1);
 });
 
-
-sequelize.sync()
-    .then(() => sequelize.models.quiz.count()) //promesa
-    .then(count => { //si se termina la promesa creo
-        if(!count){
-            return sequelize.models.quiz.bulkCreate([ //promesa
-                {question: "Capital de Italia", answer: "Roma"},
-                {question: "Capital de Francia", answer: "París"},
-                {question: "Capital de España", answer: "Madrid"},
-                {question: "Capital de Portugal", answer: "Lisboa"}
-            ]);
-        }
-    })
-    .catch(error =>{
-        console.log(error);
-    });
 
 module.exports = sequelize;
